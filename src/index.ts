@@ -1,9 +1,22 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import { routes } from '@/routes'
 
-const app = new Hono()
+export type Bindings = {
+  CORS_ORIGIN: string
+  TURNSTILE_SECRET_KEY: string
+  RESEND_API_KEY: string
+  EMAIL: string
+}
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
+const app = new Hono<{ Bindings: Bindings }>()
+
+app.use('*', async (c, next) => {
+  const corsMiddlewareHandler = cors({
+    origin: c.env.CORS_ORIGIN,
+  })
+  return corsMiddlewareHandler(c, next)
 })
+routes(app)
 
 export default app
