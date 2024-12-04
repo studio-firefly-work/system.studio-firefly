@@ -9,15 +9,18 @@ export const Mail = {
       if (typeof name !== 'string' || typeof email !== 'string')
         throw new Error('Name and email must be strings')
 
-      const resend = new Resend(c.env.RESEND_API_KEY)
-      const { data, error }  = await resend.emails.send({
-        from: c.env.EMAIL,
-        to: [email],
-        subject: 'Hello world',
-        text: `Welcome ${name}`
-      })
+      console.log(name, email)
 
-      return Response.json({ data, error })
+      // const resend = new Resend(c.env.RESEND_API_KEY)
+      // const { data, error }  = await resend.emails.send({
+      //   from: c.env.EMAIL,
+      //   to: [email],
+      //   subject: 'Hello world',
+      //   text: `Welcome ${name}`
+      // })
+
+      // return Response.json({ data, error })
+      return c.json({ success: true, message: 'Mail sent successfully!' })
 
     } catch (e: any) {
       return new Response(e.message)

@@ -4,5 +4,5 @@ import { Turnstile } from '@/middlewares/Turnstile'
 import { Mail } from '@/controllers/Mail'
 
 export const routes = (app: Hono<{ Bindings: Bindings }>) => {
-  app.post('/api/mail/send/', Turnstile.verify, Mail.send)
+  app.post('/mail/send/', Turnstile.verify, Mail.send)
 }
