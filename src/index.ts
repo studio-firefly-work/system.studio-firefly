@@ -9,7 +9,7 @@ export type Bindings = {
   EMAIL: string
 }
 
-const app = new Hono<{ Bindings: Bindings }>()
+const app = new Hono<{ Bindings: Bindings }>().basePath('/api')
 
 app.use('*', async (c, next) => {
   const corsMiddlewareHandler = cors({
