@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { routes } from '@/routes'
+import mail from '@/controllers/mail'
 
 export type Bindings = {
   CORS_ORIGIN: string
@@ -17,6 +17,7 @@ app.use('*', async (c, next) => {
   })
   return corsMiddlewareHandler(c, next)
 })
-routes(app)
+
+app.route('/mail', mail)
 
 export default app

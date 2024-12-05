@@ -1,13 +1,11 @@
-import { Context, Next } from 'hono'
+import { createMiddleware } from 'hono/factory'
 import turnstilePlugin from '@cloudflare/pages-plugin-turnstile'
 
-export const Turnstile = {
-  verify: async (c: Context, next: Next) => {
-    try {
-      turnstilePlugin({ secret: c.env.TURNSTILE_SECRET_KEY })
-      await next()
-    } catch (e: any) {
-      return new Response(e.message)
-    }
+export const turnstile = createMiddleware(async (c, next) => {
+  try {
+    turnstilePlugin({ secret: c.env.TURNSTILE_SECRET_KEY })
+    await next()
+  } catch (e: any) {
+    return new Response(e.message)
   }
-}
+})
