@@ -3,7 +3,11 @@ import turnstilePlugin from '@cloudflare/pages-plugin-turnstile'
 
 export const Turnstile = {
   verify: async (c: Context, next: Next) => {
-    turnstilePlugin({ secret: c.env.TURNSTILE_SECRET_KEY })
-    await next()
+    try {
+      turnstilePlugin({ secret: c.env.TURNSTILE_SECRET_KEY })
+      await next()
+    } catch (e: any) {
+      return new Response(e.message)
+    }
   }
 }
