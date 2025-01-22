@@ -9,12 +9,12 @@ const app = new Hono<{ Bindings: Bindings }>().post("/send", turnstile, async (c
     const [name, email, kana, message] = [body.get("name"), body.get("kana"), body.get("email"), body.get("message")];
     if (typeof name !== "string" || typeof kana !== "string" || typeof email !== "string" || typeof message !== "string") throw new Error("name, kana, email and message must be strings");
 
-    console.log(name, email, kana);
+    console.log(name, email, kana, message);
 
     const resend = new Resend(c.env.RESEND_API_KEY);
     const { data, error } = await resend.emails.send({
       from: c.env.EMAIL,
-      to: "ph1123ph17@gmail.com",
+      to: [String(email as string)],
       subject: "【スタジオfirefly】お問い合わせありがとうございます",
       text: `※このメールはシステムからの自動返信です
 
@@ -29,7 +29,7 @@ ${name} 様
 メールアドレス：${email}
 お問い合わせ内容：
 ${message}
-───────────────────────
+
 
 尚、お問い合わせ内容により返信までにお時間をいただく場合がございます。
 あらかじめご了承くださいますようお願いいたします。
