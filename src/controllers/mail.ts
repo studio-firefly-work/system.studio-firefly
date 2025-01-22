@@ -1,26 +1,25 @@
-import { Hono } from "hono"
-import { turnstile } from '@/middlewares/turnstile'
-import { Resend } from "resend"
-import type { Bindings } from '@/index.ts'
+import { Hono } from "hono";
+import { turnstile } from "@/middlewares/turnstile";
+import { Resend } from "resend";
+import type { Bindings } from "@/index.ts";
 
-const app = new Hono<{ Bindings: Bindings }>()
-  .post('/send', turnstile, async (c) => {
-    try {
-      const body = await c.req.formData()
-      const [name, email, kana, message] = [body.get("name"), body.get("kana"), body.get("email"), body.get("message")]
-      if (typeof name !== "string" || typeof kana !== "string" || typeof email !== "string" || typeof message !== "string") throw new Error("name, kana, email and message must be strings")
+const app = new Hono<{ Bindings: Bindings }>().post("/send", turnstile, async (c) => {
+  try {
+    const body = await c.req.formData();
+    const [name, email, kana, message] = [body.get("name"), body.get("kana"), body.get("email"), body.get("message")];
+    if (typeof name !== "string" || typeof kana !== "string" || typeof email !== "string" || typeof message !== "string") throw new Error("name, kana, email and message must be strings");
 
-      console.log(name, email, kana, message)
+    console.log(name, email, kana, message);
 
-      const resend = new Resend(c.env.RESEND_API_KEY)
-      const { data, error } = await resend.emails.send({
-        from: c.env.EMAIL,
-        to: [email],
-        subject: "【スタジオfirefly】お問い合わせありがとうございます",
-        text: `※このメールはシステムからの自動返信です
+    const resend = new Resend(c.env.RESEND_API_KEY);
+    const { data, error } = await resend.emails.send({
+      from: c.env.EMAIL,
+      to: [email],
+      subject: "【スタジオfirefly】お問い合わせありがとうございます",
+      text: `※このメールはシステムからの自動返信です
 
 ${name} 様
-このたびはお問い合わせをいただき、誠にありがとうございます。 
+このたびはお問い合わせをいただき、誠にありがとうございます。
 以下の内容でお問い合わせを受け付けいたしました。
 通常、3日以内にご連絡いたしますので、今しばらくお待ちくださいませ。
 
@@ -44,12 +43,11 @@ ${message}
   }
 }
 # --------------`,
-      })
-      return Response.json({ data, error })
+    });
+    return Response.json({ data, error });
+  } catch (e: any) {
+    return new Response(e.message);
+  }
+});
 
-    } catch (e: any) {
-      return new Response(e.message)
-    }
-  })
-
-export default app
+export default app;
