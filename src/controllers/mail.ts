@@ -9,7 +9,7 @@ const app = new Hono<{ Bindings: Bindings }>().post("/send", turnstile, async (c
     const [name, email, kana, message] = [body.get("name"), body.get("kana"), body.get("email"), body.get("message")];
     if (typeof name !== "string" || typeof kana !== "string" || typeof email !== "string" || typeof message !== "string") throw new Error("name, kana, email and message must be strings");
 
-    console.log(name, email, kana, message);
+    console.log(name, email, kana);
 
     const resend = new Resend(c.env.RESEND_API_KEY);
     const { data, error } = await resend.emails.send({
