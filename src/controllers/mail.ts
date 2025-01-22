@@ -10,11 +10,12 @@ const app = new Hono<{ Bindings: Bindings }>().post("/send", turnstile, async (c
     if (typeof name !== "string" || typeof kana !== "string" || typeof email !== "string" || typeof message !== "string") throw new Error("name, kana, email and message must be strings");
 
     console.log(name, email, kana, message);
+    console.log(body);
 
     const resend = new Resend(c.env.RESEND_API_KEY);
     const { data, error } = await resend.emails.send({
       from: c.env.EMAIL,
-      to: Buffer.from(email, 'utf-8').toString(),
+      to: email,
       subject: "【スタジオfirefly】お問い合わせありがとうございます",
       text: `※このメールはシステムからの自動返信です
 
