@@ -13,7 +13,7 @@ const app = new Hono<{ Bindings: Bindings }>().post("/send", turnstile, async (c
 
     const resend = new Resend(c.env.RESEND_API_KEY);
     const { data, error } = await resend.emails.send({
-      from: c.env.EMAIL,
+      from: `スタジオfirefly <${c.env.EMAIL}>`,
       to: email,
       subject: "【スタジオfirefly】お問い合わせありがとうございます",
       text: `※このメールはシステムからの自動返信です
