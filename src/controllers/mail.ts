@@ -50,9 +50,12 @@ ${message}
 }
 # --------------`,
     })
-    return Response.json({ data, error })
-  } catch (e: any) {
-    return new Response(e)
+
+    if (error) return c.json({ error: 'Bad Request' }, 400)
+    return c.json({ message: 'メール送信成功' }, 200)
+
+  } catch (error: any) {
+    return c.json({ error: 'Internal Server Error' }, 500)
   }
 })
 
