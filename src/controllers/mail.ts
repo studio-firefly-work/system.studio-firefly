@@ -1,17 +1,23 @@
-import { Hono } from "hono";
-import { turnstile } from "@/middlewares/turnstile";
-import { Resend } from "resend";
-import type { Bindings } from "@/index.ts";
+import { Hono } from "hono"
+import { utils } from "@/utils"
+import { turnstile } from "@/middlewares/turnstile"
+import { Resend } from "resend"
+import { z } from 'zod'
+import type { Bindings } from "@/index.ts"
+
+const schema = z.object({
+  name: z.string().min(1, '名前は必須です'),
+  kana: z.string().min(1, 'カナは必須です').regex(/^[\p{Script=Hiragana}\p{Script=Katakana}ー々々]+$/u, 'カナは平仮名か片仮名で入力してください'),
+  email: z.string().min(1, 'メールアドレスは必須です').email('無効なメールアドレスです'),
+  message: z.string().min(1, 'メッセージは必須です'),
+})
 
 const app = new Hono<{ Bindings: Bindings }>().post("/send", turnstile, async (c) => {
   try {
-    const body = await c.req.formData();
-    const [name, kana, email, message] = [body.get("name"), body.get("kana"), body.get("email"), body.get("message")];
-    if (typeof name !== "string" || typeof kana !== "string" || typeof email !== "string" || typeof message !== "string") throw new Error("name, kana, email and message must be strings");
+    const body = await c.req.formData()
+    const { name, kana, email, message } = await utils.cleansing(body, schema)
 
-    console.log(name, email, kana, message);
-
-    const resend = new Resend(c.env.RESEND_API_KEY);
+    const resend = new Resend(c.env.RESEND_API_KEY)
     const { data, error } = await resend.emails.send({
       from: `スタジオfirefly <${c.env.EMAIL}>`,
       to: email,
@@ -43,11 +49,11 @@ ${message}
   }
 }
 # --------------`,
-    });
-    return Response.json({ data, error });
+    })
+    return Response.json({ data, error })
   } catch (e: any) {
-    return new Response(e.message);
+    return new Response(e)
   }
-});
+})
 
-export default app;
+export default app
