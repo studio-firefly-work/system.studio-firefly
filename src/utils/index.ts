@@ -1,4 +1,4 @@
-import DOMPurify from 'dompurify'
+import xss from 'xss';
 
 /**
  * 入力データをサニタイズする関数
@@ -15,7 +15,7 @@ const sanitize = <T extends Record<string, unknown>>(inputs: T): T => {
   return Object.fromEntries(
     Object.entries(inputs).map(([key, value]) => [
       key,
-      typeof value === "string" ? DOMPurify.sanitize(value) : value
+      typeof value === "string" ? xss(value) : value
     ])
   ) as T;
 }
