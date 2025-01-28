@@ -1,31 +1,25 @@
-import xss from 'xss'
-import { z, ZodError } from 'zod'
+import DOMPurify from 'dompurify'
 
 /**
- * バリデーションとサニタイズ関数
- * @param body フォームに入力されたデータ
- * @param schema zodのバリデーションスキーマ
- * @returns 
+ * 入力データをサニタイズする関数
+ * 
+ * @template T - 入力オブジェクトの型
+ * @param {T} inputs - サニタイズ対象の入力データ（オブジェクト形式）
+ * @returns {T} - サニタイズ後のオブジェクト（入力データと同じ型）
+ * 
+ * 入力データ内の各プロパティの値が文字列型の場合、
+ * DOMPurify を使って XSS（クロスサイトスクリプティング）攻撃を防ぐために
+ * サニタイズ処理を行います。文字列以外の値はそのまま返します。
  */
-export const cleansing = async <T>(body: FormData, schema: z.ZodSchema<T>): Promise<T> => {
-  try {
-    // サニタイズ
-    const sanitizedData: Record<string, any> = {}
-    body.forEach((value, key) => {
-      sanitizedData[key] = typeof value === 'string' ? xss(value) : value
-    })
-
-    // バリデーション
-    return schema.parse(sanitizedData)
-
-  } catch (error) {
-    if (error instanceof ZodError) {
-      throw new Error(`Validation failed: ${error.errors.map(e => e.message).join(", ")}`)
-    }
-    throw new Error("Unknown error occurred")
-  }
+const sanitize = <T extends Record<string, unknown>>(inputs: T): T => {
+  return Object.fromEntries(
+    Object.entries(inputs).map(([key, value]) => [
+      key,
+      typeof value === "string" ? DOMPurify.sanitize(value) : value
+    ])
+  ) as T;
 }
 
 export const utils = {
-  cleansing
+  sanitize
 }
