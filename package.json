@@ -2,7 +2,8 @@
   "name": "system.studio-firefly",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify"
+    "deploy": "wrangler deploy --minify",
+    "test": "vitest"
   },
   "dependencies": {
     "@cloudflare/pages-plugin-turnstile": "^1.0.2",
@@ -13,8 +14,10 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.6.7",
     "@cloudflare/workers-types": "^4.20241112.0",
     "@types/node": "^22.10.7",
+    "vitest": "2.1.8",
     "wrangler": "^3.88.0"
   }
 }

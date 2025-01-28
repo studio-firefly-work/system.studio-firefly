@@ -78,5 +78,6 @@ ${message}
       return c.json(error)
     }
   })
+  .get('/hello', (c) => c.json({ message: 'Hello, world!' }))
 
 export default app
