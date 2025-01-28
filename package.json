@@ -6,9 +6,10 @@
   },
   "dependencies": {
     "@cloudflare/pages-plugin-turnstile": "^1.0.2",
+    "@hono/zod-validator": "^0.4.2",
+    "dompurify": "^3.2.3",
     "hono": "^4.6.12",
     "resend": "^4.0.1",
-    "xss": "^1.0.15",
     "zod": "^3.24.1"
   },
   "devDependencies": {
