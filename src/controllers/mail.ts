@@ -35,7 +35,6 @@ const app = new Hono<{ Bindings: Bindings }>()
     try {
       const body = c.req.valid('form')
       const { name, kana, email, message } = utils.sanitize(body)
-      console.log(name, kana, email, message)
 
       const resend = new Resend(c.env.RESEND_API_KEY)
       const { data, error } = await resend.emails.send({
@@ -75,7 +74,7 @@ ${message}
       else if (data) return c.json(data, 200)
 
     } catch (error: any) {
-      return c.json(error)
+      return c.json({ message: error.message }, 500)
     }
   })
   .get('/hello', (c) => c.json({ message: 'Hello, world!' }))
