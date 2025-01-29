@@ -10,8 +10,7 @@
     ],
     "types": [
       "node",
-      "@cloudflare/workers-types/experimental",
-      "@cloudflare/vitest-pool-workers"
+      "@cloudflare/workers-types/experimental"
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
