@@ -24,10 +24,10 @@ const RESEND_ERROR_CODES_BY_KEY = {
 } as const
 
 const schema = z.object({
-  name: z.string().min(1, '名前は必須です'),
-  kana: z.string().min(1, 'カナは必須です').regex(/^[\p{Script=Hiragana}\p{Script=Katakana}ー々々]+$/u, 'カナは平仮名か片仮名で入力してください'),
-  email: z.string().min(1, 'メールアドレスは必須です').email('無効なメールアドレスです'),
-  message: z.string().min(1, 'メッセージは必須です')
+  name: z.string().min(1, 'Name is required'),
+  kana: z.string().min(1, 'Kana is required').regex(/^[\p{Script=Hiragana}\p{Script=Katakana}ー々々]+$/u, 'Kana must be in Hiragana or Katakana'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  message: z.string().min(1, 'Message is required')
 })
 
 const app = new Hono<{ Bindings: Bindings }>()
