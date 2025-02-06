@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import app from '@/controllers/mail'
+import app from '@/controllers/contact'
 
-describe('GET /api/mail/hello', () => {
+describe('GET /api/contact/hello', () => {
   it('should return a JSON response with message', async () => {
     const res = await app.request('/hello')
 

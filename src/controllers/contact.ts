@@ -1,6 +1,7 @@
 import { Hono } from "hono"
+import prismaClients from '@/../prisma/prismaClient'
+import { ContactSchema } from '@/schema/zod'
 import { Resend } from "resend"
-import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
 import { utils } from "@/utils"
 import { turnstile } from "@/middlewares/turnstile"
@@ -23,18 +24,17 @@ const RESEND_ERROR_CODES_BY_KEY = {
   internal_server_error: 500,
 } as const
 
-const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  kana: z.string().min(1, 'Kana is required').regex(/^[\p{Script=Hiragana}\p{Script=Katakana}ー々々]+$/u, 'Kana must be in Hiragana or Katakana'),
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
-  message: z.string().min(1, 'Message is required')
-})
-
 const app = new Hono<{ Bindings: Bindings }>()
-  .post("/send", turnstile, zValidator('form', schema), async (c) => {
+  .post("/", turnstile, zValidator('form', ContactSchema), async (c) => {
     try {
       const body = c.req.valid('form')
       const { name, kana, email, message } = utils.sanitize(body)
+      console.log(name, kana, email, message)
+
+      const prisma = await prismaClients.fetch(c.env.DB)
+      await prisma.contact.create({
+        data: { name, kana, email, message }
+      })
 
       const resend = new Resend(c.env.RESEND_API_KEY)
       const { data, error } = await resend.emails.send({

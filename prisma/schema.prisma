@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator zod {
+  provider         = "zod-prisma-types"
+  output           = "../src/schema/zod"
+  createInputTypes = false
+}
+
+model Contact {
+  /// @zod.custom.omit([input, model])
+  id        Int      @id @default(autoincrement())
+  /// @zod.string.min(1)
+  name      String
+  /// @zod.string.min(1).regex(/^[\p{Script=Hiragana}\p{Script=Katakana}ー々]+$/u)
+  kana      String
+  /// @zod.string.email()
+  email     String
+  /// @zod.string.min(1)
+  message   String
+  /// @zod.custom.omit([input, model])
+  createdAt DateTime @default(now())
+  /// @zod.custom.omit([input, model])
+  updatedAt DateTime @updatedAt
+}
