@@ -15,10 +15,10 @@ compatibility_date = "2024-11-29"
 # binding = "MY_BUCKET"
 # bucket_name = "my-bucket"
 
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "my-database"
-# database_id = ""
+[[d1_databases]]
+binding = "DB"
+database_name = "studio_firefly"
+database_id = "f884ec31-cb9b-48e8-852d-cfdcfd51172f"
 
 # [ai]
 # binding = "AI"
